@@ -27,6 +27,18 @@ if (isset($_POST['sujet']) && isset($_POST['reponse1']) &&  isset($_POST['repons
     $reponseManager->add($reponse3);
     
   }
+  $allQuestions = $questionManager->get();
+
+  // var_dump($allQuestions);
+  foreach ($allQuestions as $question) {
+      echo $question->getSujet() . '<br><br>';
+  
+      $allReponse = $reponseManager->getReponseByQuestion($question->getId());
+  
+      foreach ($allReponse as $reponse){
+        echo $reponse->getReponse(). '<br><br>';
+      }
+  }
 
 ?>
 
@@ -37,12 +49,13 @@ if (isset($_POST['sujet']) && isset($_POST['reponse1']) &&  isset($_POST['repons
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POO_QCM</title>
+    <link href="/QCM/css/main.css"rel="stylesheet" >
 </head>
 <body>
     
 <div class="container-form">
       <form action="" method="post">
-          <p>
+          <div class="formulaire">
             Question : <input type="text" name="sujet" maxlength="240" style="margin-bottom: 10px;"/><br>
             Réponse 1 (bonneReponse) : <input type="text" name="reponse1" maxlength="240" style="margin-bottom: 10px;"/><br>
             Réponse 2 : <input type="text" name="reponse2" maxlength="240" style="margin-bottom: 10px;"/><br>
@@ -50,6 +63,7 @@ if (isset($_POST['sujet']) && isset($_POST['reponse1']) &&  isset($_POST['repons
             Description : <input type="text" name="description" maxlength="240" style="margin-bottom: 10px;"/><br>
           
             <input type="submit"  name="question" style="margin-bottom: 10px">
+          </div>
       </form>
   </div>
 

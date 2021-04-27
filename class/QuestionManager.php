@@ -23,4 +23,22 @@ class QuestionManager
   {
     $this->_db = $db;
   }
-}
+
+
+
+  public function get(){
+    
+    $allSujet = [];
+    
+    $q = $this->_db->prepare('SELECT * FROM questions');
+    $q->execute();
+    $donnees = $q->fetchAll(PDO::FETCH_ASSOC);
+    
+    foreach ($donnees as $donnee){
+      $allSujet[] = new Question($donnee);
+    }
+    
+    return $allSujet;
+  }
+
+ } 

@@ -30,4 +30,19 @@ class ReponseManager
   {
     $this->_db = $db;
   }
+
+  public function getReponseByQuestion($idQuestion){
+    $arrayListReponse=[];
+    $q = $this->_db->prepare('SELECT * FROM reponses WHERE id_question=?');
+    $q->execute([$idQuestion]);
+    $listReponses = $q->fetchAll();
+
+    foreach($listReponses as $reponse){
+      array_push($arrayListReponse, new Reponse($reponse));
+    }
+    return $arrayListReponse;
+
+  }
+
+
 }
