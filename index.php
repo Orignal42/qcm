@@ -1,30 +1,57 @@
 <?php
-require_once(__DIR__."/config/autoload.php");
+ function chargerClasse($classname)
+ {
+   require 'class/'. $classname.'.php';
+ }
+ 
+ spl_autoload_register('chargerClasse');
 $db = new PDO('mysql:host=127.0.0.1;dbname=qcm', 'root', '');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING); // On émet une alerte à chaque fois qu'une requête a échoué.
-$qcm = new Qcm();
+
+
 $manager = new Qcm($db);
-
-
-$question1 = new Question('POO signifie?');
-$question1->ajouterReponse(new Reponse('Php Orienté Objet'));
-$question1->ajouterReponse(new Reponse('ProgrammatiOn Orientée'));
-$question1->ajouterReponse(new Reponse('Programmation Orientée Objet', Reponse::BONNE_REPONSE));
-$question1->setExplications('Sans commentaires si vous avez eu faux :-°');
-$qcm->ajouterQuestion($question1);
-
-$question2 = new Question('Qui est cthulhu?');
-$question2->ajouterReponse(new Reponse('un prêtre extraterrestre', Reponse::BONNE_REPONSE));
-$question2->ajouterReponse(new Reponse('une marque de chaussure'));
-$question2->ajouterReponse(new Reponse('obi wan kennobi'));
-$question2->setExplications('Sans commentaires si vous avez eu faux :-°');
-$qcm->ajouterQuestion($question2);
+$questionManager = new QuestionManager($db);
+$reponseManager = new ReponseManager($db);
+if (isset($_POST['sujet']) && isset($_POST['reponse1']) &&  isset($_POST['reponse2']) && isset($_POST['reponse3'])&& isset($_POST['description'])) {
+  
+    $question = new Question(['sujet'=> $_POST['sujet'] , 'description' => $_POST['description']]);
+    $questionManager->add($question);
+  
  
- 
-$qcm->setAppreciation(array('0-10' => 'Pas top du tout ...',
-                            '10-20' => 'Très bien ...'));
-$qcm->generer();
-
+  
+    $reponse = new Reponse(['reponse' => $_POST['reponse1'], 'isTrue' => true, 'idQuestion' => $question->getId()]);
+    $reponse2 = new Reponse(['reponse' => $_POST['reponse2'], 'isTrue' => false, 'idQuestion' => $question->getId()]);
+    $reponse3 = new Reponse(['reponse' => $_POST['reponse3'], 'isTrue' => false, 'idQuestion' => $question->getId()]);
+    $reponseManager->add($reponse);
+    $reponseManager->add($reponse2);
+    $reponseManager->add($reponse3);
+    
+  }
 
 ?>
 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POO_QCM</title>
+</head>
+<body>
+    
+<div class="container-form">
+      <form action="" method="post">
+          <p>
+            Question : <input type="text" name="sujet" maxlength="240" style="margin-bottom: 10px;"/><br>
+            Réponse 1 (bonneReponse) : <input type="text" name="reponse1" maxlength="240" style="margin-bottom: 10px;"/><br>
+            Réponse 2 : <input type="text" name="reponse2" maxlength="240" style="margin-bottom: 10px;"/><br>
+            Réponse 3 : <input type="text" name="reponse3" maxlength="240" style="margin-bottom: 10px;"/><br>
+            Description : <input type="text" name="description" maxlength="240" style="margin-bottom: 10px;"/><br>
+          
+            <input type="submit"  name="question" style="margin-bottom: 10px">
+      </form>
+  </div>
+
+</body>
+</html>
