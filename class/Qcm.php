@@ -3,8 +3,7 @@
 class Qcm {
 
     private $_db;
-    private $questions = [];
-    private $appreciation;
+  
 
 
     public function __construct($db){

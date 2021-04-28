@@ -33,7 +33,7 @@ class ReponseManager
 
   public function getReponseByQuestion($idQuestion){
     $arrayListReponse=[];
-    $q = $this->_db->prepare('SELECT * FROM reponses WHERE id_question=?');
+    $q = $this->_db->prepare('SELECT * FROM reponses WHERE id_question=? ORDER BY RAND()');
     $q->execute([$idQuestion]);
     $listReponses = $q->fetchAll();
 
